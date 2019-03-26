@@ -13,6 +13,10 @@ body {
 	max-width: 1024px;
 }
 
+.logo {
+	height:80px;
+}
+
 h1 {
 	margin-top: 6em;
 	margin-bottom:5%;

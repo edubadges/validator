@@ -19,7 +19,7 @@ from .utils import list_of, CachableDocumentLoader, jsonld_use_cache
 
 
 DEFAULT_OPTIONS = {
-    'include_original_json': False,  # Return the original JSON strings fetched from HTTP
+    'include_original_json': True,  # Return the original JSON strings fetched from HTTP
     'use_cache': True,
     'cache_backend': 'memory',
     'cache_expire_after': 300,

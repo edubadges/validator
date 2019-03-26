@@ -57,5 +57,44 @@ def results():
         results=json.dumps(verification_results, indent=4))
 
 
+@app.route("/check-badge", methods=['GET'])
+def check_badge_get_redirect():
+    return redirect('/')
+
+
+@app.route("/check-badge", methods=['POST'])
+def check_badge():
+    data = request.get_json()
+    profile = None
+    if not data and isinstance(request.form.get('data'), six.string_types) or request.files:
+        user_input = request.form['data']
+        if 'image' in request.files and len(request.files['image'].filename):
+            user_input = request.files['image']
+
+        try:
+            profile = json.loads(request.form.get('profile'))
+        except (TypeError, ValueError):
+            profile = None
+    elif data:
+        user_input = data.get('data')
+        try:
+            profile = data['profile']
+            if isinstance(profile, six.string_types):
+                profile = json.loads(profile)
+        except (TypeError, ValueError, KeyError):
+            pass
+
+    verification_results = verify(user_input, recipient_profile=profile)
+    results_json = json.dumps(verification_results, indent=4, ensure_ascii=True)
+    if request_wants_json():
+        return json.dumps(verification_results, indent=4), 200, {'Content-Type': 'application/json'}
+    return render_template(
+        'check-badge.html', is_valid=verification_results.get('report', {}).get('valid'),
+        error_count=verification_results.get('report', {}).get('errorCount'),
+        results_json=json.dumps(verification_results, indent=4),
+        results=verification_results
+    )
+
+
 if __name__ == "__main__":
     app.run()
