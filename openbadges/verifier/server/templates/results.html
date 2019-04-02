@@ -16,8 +16,144 @@
 		</div>
 		<div class="col-md-10">{{ error_count }}</div>
 	</div>
+	{% if not is_valid %}
+	<div class="row">
+		{% for error in errors %}
+			<div class="col-md-2">
+				<strong>Error</strong>
+			</div>
+			<div class="col-md-10">{{ error.get('result') }}</div>
+		{% endfor %}
+	</div>
+	{% endif %}
 </div>
-<div id="results">
-	<textarea id="data" rows="30">{{ results }}</textarea>
+
+<div class="row">
+	<div class="container col-md-3">
+		<img class="img-responsive" src="{{ assertion_image }}"/>
+	</div>
+	<div class="col-md-9">
+
+		<!-- Assertion -->
+
+		<div>
+			<span class="label label-default">About this award</span>
+		</div>
+		{% if assertion_data %}
+		<div class="row">
+			<div class="col-md-2">
+				<strong>Recipient name</strong>
+			</div>
+			<div class="col-md-10">{{ assertion_data.get('extensions:recipientProfile', {}).get('name') }}</div>
+		</div>
+		<div class="row">
+			<div class="col-md-2">
+				<strong>Issued on</strong>
+			</div>
+			<div class="col-md-10">{{ assertion_data.get('issuedOn') }}</div>
+		</div>
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-10">
+				<a href="{{ assertion_data.get('id') }}">View full award details</a>
+			</div>
+		</div>
+		{% else %}
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-10">
+				<span> No data </span>
+			</div>
+		</div>
+		{% endif %}
+
+
+		<!-- Badge -->
+
+		<div>
+			<span class="label label-default">About the Badge</span>
+		</div>
+		{% if badgeclass_data %}
+		<div class="row">
+			<div class="col-md-2">
+				<strong>Badge</strong>
+			</div>
+			<div class="col-md-10">{{ badgeclass_data.get('name') }}</div>
+		</div>
+		<div class="row">
+			<div class="col-md-2">
+				<strong>Description</strong>
+			</div>
+			<div class="col-md-10">{{ badgeclass_data.get('description') }}</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-10">
+				<a href="{{ badgeclass_data.get('id') }}">View full badge details</a>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-2">
+				<strong>Extensions</strong>
+			</div>
+			{% if extensions.items() %}
+				{% for key, value in extensions.items() %}
+					<div class="col-md-2"></div>
+					<div class="col-md-10">{{ value }}</div>
+				{% endfor %}
+			{% else %}
+				<div class="col-md-2"></div>
+				<div class="col-md-10">No extensions</div>
+			{% endif %}
+		</div>
+
+		{% else %}
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-10">
+				<span> No data </span>
+			</div>
+		</div>
+		{% endif %}
+
+
+		<!-- Issuer	-->
+
+		<div>
+			<span class="label label-default">About the issuer</span>
+		</div>
+		{% if issuer_data %}
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-10">
+				<a href="{{ issuer_data.get('url') }}">Website</a>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-10">
+				<a href="{{ issuer_data.get('email') }}">Contact Email</a>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-10">
+				<a href="{{ issuer_data.get('id') }}">View fill issuer details</a>
+			</div>
+		</div>
+		{% else %}
+		<div class="row">
+			<div class="col-md-2"></div>
+			<div class="col-md-10">
+				<span> No data </span>
+			</div>
+		</div>
+		{% endif %}
+
+
+	</div>
+
 </div>
 {% endblock %}

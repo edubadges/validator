@@ -14,7 +14,7 @@ from .state import (filter_active_tasks, filter_messages_for_report, format_mess
 from . import tasks
 from .tasks.task_types import INTAKE_JSON, JSONLD_COMPACT_DATA, VALIDATE_EXTENSION_NODE
 from .tasks.validation import OBClasses
-from .utils import list_of, CachableDocumentLoader, jsonld_use_cache
+from .utils import list_of, CachableDocumentLoader, jsonld_use_cache, override_eduid_error
 
 
 
@@ -156,10 +156,7 @@ def generate_report(store, options=DEFAULT_OPTIONS):
     report['errorCount'] = len([m for m in report['messages'] if m['messageLevel'] == MESSAGE_LEVEL_ERROR])
     report['warningCount'] = len([m for m in report['messages'] if m['messageLevel'] == MESSAGE_LEVEL_WARNING])
 
-    # make sure uri format check failure will pass
-    if report['errorCount'] == 1:
-        if 'not valid in unknown type node' in report['messages'][0]['result']:  # = uri format validity check fail
-            report['errorCount'] = 0
+    override_eduid_error(report)
 
     is_valid = True  # Assume to be true at first
     if bool(report['errorCount']) or len(state.get('graph', [])) == 0:
