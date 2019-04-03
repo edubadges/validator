@@ -12,6 +12,16 @@
 </style>
 <p class="top-buffer">The results returned by the validator are shown in the box below. Please report any bugs or issues to the <a href="https://github.com/openbadges/badgecheck/issues">development team</a>.</p>
 
+{% if is_valid and not eduid_given%}
+	<div class="alert alert-warning">
+		<div class="row">
+			<div class="col-md-12">
+				<strong>Recipient not validated, please fill in an EduID in the previous form to check if the Badge belongs to the right person.</strong>
+			</div>
+		</div>
+	</div>
+{% endif %}
+
 <div class="alert {% if is_valid %}alert-success{% else %}alert-danger{% endif %}">
 	<div class="row">
 		<div class="col-md-2">
@@ -29,9 +39,9 @@
 	<div class="row">
 		{% for error in errors %}
 			<div class="col-md-2">
-				<strong>Error</strong>
+				<strong>Failure(s)</strong>
 			</div>
-			<div class="col-md-10">{{ error.get('result') }}</div>
+			<div class="col-md-10">{{ error.get('name') }}</div>
 		{% endfor %}
 	</div>
 	{% endif %}

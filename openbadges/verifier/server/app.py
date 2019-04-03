@@ -28,14 +28,16 @@ def result_get_redirect():
 def results():
     data = request.get_json()
     profile = None
+    eduid_given = False
     if not data and isinstance(request.form.get('data'), six.string_types) or request.files:
         user_input = request.form['data']
         if 'image' in request.files and len(request.files['image'].filename):
             user_input = request.files['image']
-
-        try:
-            profile = json.loads(request.form.get('profile'))
-        except (TypeError, ValueError):
+        edu_id = request.form.get('profile')
+        if edu_id:
+            profile = {'id': edu_id}
+            eduid_given = True
+        else:
             profile = None
     elif data:
         user_input = data.get('data')
@@ -66,6 +68,7 @@ def results():
         is_valid=verification_results.get('report', {}).get('valid'),
         error_count=verification_results.get('report', {}).get('errorCount'),
         errors=errors,
+        eduid_given=eduid_given,
         badgeclass_data=badgeclass_data,
         issuer_data=issuer_data,
         assertion_data=assertion_data,
