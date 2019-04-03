@@ -1,7 +1,16 @@
 {% extends "base.html" %}
 
 {% block main %}
-<p>The results returned by the validator are shown in the box below. Please report any bugs or issues to the <a href="https://github.com/openbadges/badgecheck/issues">development team</a>.</p>
+
+<style>
+.top-buffer {
+    margin-top:20px;
+}
+.label{
+    font-size: 90%;
+}
+</style>
+<p class="top-buffer">The results returned by the validator are shown in the box below. Please report any bugs or issues to the <a href="https://github.com/openbadges/badgecheck/issues">development team</a>.</p>
 
 <div class="alert {% if is_valid %}alert-success{% else %}alert-danger{% endif %}">
 	<div class="row">
@@ -37,29 +46,29 @@
 		<!-- Assertion -->
 
 		<div>
-			<span class="label label-default">About this award</span>
+			<span class="label label-default label-large">About this award</span>
 		</div>
 		{% if assertion_data %}
-		<div class="row">
+		<div class="row top-buffer">
 			<div class="col-md-2">
 				<strong>Recipient name</strong>
 			</div>
 			<div class="col-md-10">{{ assertion_data.get('extensions:recipientProfile', {}).get('name') }}</div>
 		</div>
-		<div class="row">
+		<div class="row top-buffer">
 			<div class="col-md-2">
 				<strong>Issued on</strong>
 			</div>
 			<div class="col-md-10">{{ assertion_data.get('issuedOn') }}</div>
 		</div>
-		<div class="row">
+		<div class="row top-buffer">
 			<div class="col-md-2"></div>
 			<div class="col-md-10">
 				<a href="{{ assertion_data.get('id') }}">View full award details</a>
 			</div>
 		</div>
 		{% else %}
-		<div class="row">
+		<div class="row top-buffer">
 			<div class="col-md-2"></div>
 			<div class="col-md-10">
 				<span> No data </span>
@@ -71,43 +80,61 @@
 		<!-- Badge -->
 
 		<div>
-			<span class="label label-default">About the Badge</span>
+			<span class="label label-default label-large">About the Badge</span>
 		</div>
 		{% if badgeclass_data %}
-		<div class="row">
+		<div class="row top-buffer">
 			<div class="col-md-2">
 				<strong>Badge</strong>
 			</div>
 			<div class="col-md-10">{{ badgeclass_data.get('name') }}</div>
 		</div>
-		<div class="row">
+		<div class="row top-buffer">
 			<div class="col-md-2">
 				<strong>Description</strong>
 			</div>
 			<div class="col-md-10">{{ badgeclass_data.get('description') }}</div>
 		</div>
 
-		<div class="row">
+		<div class="row top-buffer">
 			<div class="col-md-2"></div>
 			<div class="col-md-10">
 				<a href="{{ badgeclass_data.get('id') }}">View full badge details</a>
 			</div>
 		</div>
 
-		<div class="row">
-			<div class="col-md-2">
-				<strong>Extensions</strong>
+		{% if extensions.items() %}
+			<div class="row top-buffer">
+				<div class="col-md-2">
+					<strong>Extensions</strong>
+				</div>
+				<div class="col-md-10">
+					{% for key, value in extensions.items() %}
+						{% if loop.index > 1 %}
+							<div class="row top-buffer">
+								<div class="col-md-2"><strong>{{ key }}</strong></div>
+							</div>
+						{% else %}
+							<div class="row">
+								<div class="col-md-2"><strong>{{ key }}</strong></div>
+							</div>
+						{% endif %}
+						{% for k, v in value.items() %}
+							<div class="row">
+								<div class="col-md-3">{{ k }}</div>
+								<div class="col-md-7">{{ v }}</div>
+							</div>
+						{% endfor %}
+					{% endfor %}
+				</div>
 			</div>
-			{% if extensions.items() %}
-				{% for key, value in extensions.items() %}
-					<div class="col-md-2"></div>
-					<div class="col-md-10">{{ value }}</div>
-				{% endfor %}
-			{% else %}
-				<div class="col-md-2"></div>
-				<div class="col-md-10">No extensions</div>
-			{% endif %}
-		</div>
+
+		{% else %}
+			<div class="row">
+				<div class="col-md-2">No extensions</div>
+			</div>
+		{% endif %}
+
 
 		{% else %}
 		<div class="row">
@@ -122,7 +149,7 @@
 		<!-- Issuer	-->
 
 		<div>
-			<span class="label label-default">About the issuer</span>
+			<span class="label label-default label-large">About the issuer</span>
 		</div>
 		{% if issuer_data %}
 		<div class="row">
