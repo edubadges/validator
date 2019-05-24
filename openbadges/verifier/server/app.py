@@ -16,7 +16,10 @@ def request_wants_json():
 @app.route("/")
 def home():
     provided_url = request.args.get('url', "")
-    return render_template('index.html', url=provided_url)
+    l = [key for key in request.args.keys() if key.startswith('identity__')]
+    recipient_profile = {'type': l[0] if l else ''}
+    recipient_profile['value'] = request.args.get(recipient_profile['type'], "")
+    return render_template('index.html', url=provided_url, recipient_profile=recipient_profile)
 
 
 @app.route("/results", methods=['GET'])
