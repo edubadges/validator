@@ -42,6 +42,10 @@
 				<strong>Failure(s)</strong>
 			</div>
 			<div class="col-md-10">{{ error.get('name') }}</div>
+			{% if error.get('explanation') %}
+				<br><br>
+				<div class="col-md-10">{{ error.get('explanation') }}</div>
+			{% endif %}
 		{% endfor %}
 	</div>
 	{% endif %}

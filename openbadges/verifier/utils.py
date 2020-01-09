@@ -132,11 +132,28 @@ def get_assertion_image(verification_results, assertion_image_url):
             return original_json[assertion_image_url]
 
 
+error_explanations = {
+    "DETECT_AND_VALIDATE_NODE_CLASS": "This most likely means that this Badge is set to private by the receiver. Please ask the receiver to set it to public. If this is not the case, then this Badge is not hosted anymore and cannot be verified.",
+    "ASSERTION_TIMESTAMP_CHECKS": "This means the Badge has expired and is not valid anymore."
+}
+
+
+def add_error_explanation(errors):
+    explanation = ""
+    for error in errors:
+        for key in error_explanations.keys():
+            if error['name'] == key:
+                explanation = error_explanations[key]
+    error['explanation'] = explanation
+
+
 def get_errors(verification_results):
     report = verification_results.get('report', False)
     if report:
         if not report.get('valid'):
-            return report.get('messages')
+            messages = report.get('messages')
+            add_error_explanation(messages)
+            return messages
 
 
 def override_eduid_error(report):
