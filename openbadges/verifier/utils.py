@@ -1,20 +1,13 @@
-from future.standard_library import install_aliases
-install_aliases()
+import sys
+from collections import OrderedDict
+from urllib.parse import urlparse
 
 import hashlib
 import json
-import string
-import sys
-try:
-    from urlparse import urlparse
-except ImportError:
-    from urllib.parse import urlparse
-
 import requests
 import requests_cache
+import string
 from pyld.jsonld import JsonLdError
-from collections import OrderedDict
-
 
 MESSAGE_LEVEL_ERROR = 'ERROR'
 MESSAGE_LEVEL_WARNING = 'WARNING'
@@ -90,7 +83,6 @@ def list_of(value):
 
 
 def identity_hash(identfier, salt='', alg='sha256'):
-
     if not sys.version[:3] < '3':
         identfier = identfier.encode()
         salt = salt.encode()
