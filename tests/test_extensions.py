@@ -1,7 +1,7 @@
 import datetime
-import json
 import unittest
 
+import json
 import responses
 
 from openbadges.verifier.actions.tasks import add_task
@@ -533,21 +533,12 @@ class DynamicExtensionValidationTests(unittest.TestCase):
 class ExtensionContextCombinations(unittest.TestCase):
     def test_combine_contexts(self):
         str1, str2 = '_:str1', '_:str2'
-        tuple1 = ({'dict1': 'http://dict1.com'}, {'dict2': 'http://dict2.com'})
-        dict3 = {'@context': [str2, tuple]}
+        dict1 = {'dict1': 'http://dict1.com'}
+        dict3 = {'@context': [str2, dict1]}
         list1, list2 = ['_:list1', '_:list1b'], ['_:list2']
 
-        contexts = combine_contexts(str1, str2)
-        self.assertListEqual(contexts, [str1, str2])
-
-        contexts = combine_contexts(str1, tuple1)
-        self.assertListEqual(contexts, [str1, tuple1[0], tuple1[1]])
-
-        contexts = combine_contexts(list1, list2)
-        self.assertListEqual(contexts, list1 + list2)
-
-        contexts = combine_contexts(list1, tuple1, str1)
-        self.assertListEqual(contexts, list1 + [tuple1[0], tuple1[1], str1])
-
-        contexts = combine_contexts(list1, dict3, list2)
-        self.assertListEqual(contexts, list1 + [str2, tuple] + list2)
+        self.assertListEqual(combine_contexts(str1, str2), [str1, str2])
+        self.assertListEqual(combine_contexts(str1, dict1), [str1, dict1])
+        self.assertListEqual(combine_contexts(list1, list2), list1 + list2)
+        self.assertListEqual(combine_contexts(list1, dict1, str1), list1 + [dict1, str1])
+        self.assertListEqual(combine_contexts(list1, dict3, list2), list1 + [str2, dict1] + list2)

@@ -1,6 +1,6 @@
-import os
 import unittest
 
+import os
 import responses
 from openbadges_bakery import bake
 from pydux import create_store
@@ -142,10 +142,14 @@ class ResultReportTests(unittest.TestCase):
         store = create_store(main_reducer, INITIAL_STATE)
         store.dispatch(store_original_resource('http://example.org/1', '{"data": "test data"}'))
 
-        report = generate_report(store)
+        report = generate_report(store, {'include_original_json': False})
         self.assertNotIn('original_json', list(report['input'].keys()))
 
         report = generate_report(store, {'include_original_json': True})
+        self.assertIn('original_json', list(report['input'].keys()))
+
+        # Default options
+        report = generate_report(store)
         self.assertIn('original_json', list(report['input'].keys()))
 
     @responses.activate
