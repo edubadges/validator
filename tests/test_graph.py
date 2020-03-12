@@ -1,22 +1,21 @@
 import json
-import responses
 import unittest
+
+import responses
 
 from openbadges.verifier.actions.action_types import ADD_NODE, STORE_ORIGINAL_RESOURCE
 from openbadges.verifier.actions.graph import add_node, patch_node, patch_node_reference
 from openbadges.verifier.actions.tasks import add_task
+from openbadges.verifier.openbadges_context import OPENBADGES_CONTEXT_V2_URI
 from openbadges.verifier.reducers.graph import graph_reducer
 from openbadges.verifier.state import get_node_by_id
-from openbadges.verifier.tasks.graph import fetch_http_node, jsonld_compact_data
 from openbadges.verifier.tasks import run_task
+from openbadges.verifier.tasks.graph import fetch_http_node, jsonld_compact_data
 from openbadges.verifier.tasks.task_types import (DETECT_AND_VALIDATE_NODE_CLASS, FETCH_HTTP_NODE, INTAKE_JSON,
-                                         JSONLD_COMPACT_DATA)
-from openbadges.verifier.openbadges_context import OPENBADGES_CONTEXT_V2_URI
+                                                  JSONLD_COMPACT_DATA)
 from openbadges.verifier.utils import MESSAGE_LEVEL_WARNING
 from openbadges.verifier.verifier import verify
-
 from .utils import set_up_context_mock, set_up_image_mock
-
 
 try:
     from .testfiles.test_components import test_components
@@ -47,7 +46,7 @@ class HttpFetchingTests(unittest.TestCase):
     def test_svg_fetch_with_complex_mimetype(self):
         url = 'http://example.com/circle'
         svg_circle = u'<svg height="100" width="100"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" ' \
-                      u'fill="red" /></svg>'
+                     u'fill="red" /></svg>'
         responses.add(
             responses.GET, url,
             body=svg_circle,
@@ -95,7 +94,7 @@ class NodeStorageTests(unittest.TestCase):
     def test_store_node_inaccurate_id_value(self):
         """
         Due to redirects, we may not have the canonical id for a node.
-        If there's a conflict due to the id and the node[id] in add_node(id, node), 
+        If there's a conflict due to the id and the node[id] in add_node(id, node),
         what should we do?
         """
         pass
@@ -155,7 +154,6 @@ class NodeUpdateTests(unittest.TestCase):
         self.assertEqual(graph_state[0]['badge'], new_id)
 
 
-
 class JsonLdCompactTests(unittest.TestCase):
     def setUpContextCache(self):
         data = test_components['openbadges_context']
@@ -192,7 +190,6 @@ class JsonLdCompactTests(unittest.TestCase):
         result, message, actions = jsonld_compact_data({}, task)
         self.assertFalse(result)
         self.assertEqual(message, 'Could not load data')
-
 
     @responses.activate
     def test_reduce_compacted_output(self):

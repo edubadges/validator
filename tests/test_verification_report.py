@@ -1,20 +1,16 @@
 import os
-from openbadges_bakery import bake
-import responses
 import unittest
+
+import responses
+from openbadges_bakery import bake
 from pydux import create_store
 
 from openbadges.verifier.actions.validation_report import set_validation_subject
 from openbadges.verifier.reducers import main_reducer
 from openbadges.verifier.state import INITIAL_STATE
 from openbadges.verifier.verifier import generate_report, verification_store
-
-try:
-    from .testfiles.test_components import test_components
-    from tests.utils import set_up_context_mock
-except (ImportError, SystemError):
-    from .testfiles.test_components import test_components
-    from .testutils import set_up_context_mock
+from tests.utils import set_up_context_mock
+from .testfiles.test_components import test_components
 
 
 class VerificationReportTests(unittest.TestCase):
@@ -82,10 +78,9 @@ class VerificationReportTests(unittest.TestCase):
         """
         pass
 
-
     def test_messages_warnings_counts(self):
         """
         The validationReport contains the properties of messages, warningCount, errorCount, valid
-        :return: 
+        :return:
         """
         pass

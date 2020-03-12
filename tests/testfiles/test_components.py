@@ -1,30 +1,30 @@
 test_components = {
-'1_0_basic_assertion': """{
+    '1_0_basic_assertion': """{
     "uid":"123abc",
     "recipient": {"identity": "test@example.com","hashed": false, "type": "email"},
     "badge": "http://a.com/badgeclass",
     "issuedOn": "2015-04-30",
     "verify": {"type": "hosted", "url": "http://a.com/instance"}
 }""",
-'1_0_basic_badgeclass': """{
+    '1_0_basic_badgeclass': """{
     "name": "Basic Badge",
     "description": "Basic as it gets. v1.0",
     "image": "http://a.com/badgeclass_image",
     "criteria": "http://a.com/badgeclass_criteria",
     "issuer": "http://a.com/issuer"
 }""",
-'1_0_basic_issuer': """{
+    '1_0_basic_issuer': """{
     "name": "Basic Issuer",
     "url": "http://a.com/issuer"
 }""",
-'1_0_assertion_with_errors': """{
+    '1_0_assertion_with_errors': """{
     "uid":"123abc",
     "recipient": "test@example.com",
     "badge": "http://a.com/badgeclass",
     "issuedOn": "2015-04-30",
     "verify": {"type": "hosted", "url": "http://a.com/instance"}
 }""",
-'0_5_assertion': """{
+    '0_5_assertion': """{
     "recipient": "test@example.com",
     "badge": {
         "version": "0.5.0",
@@ -38,7 +38,7 @@ test_components = {
         }
     }
 }""",
-'0_5_1_assertion': """{
+    '0_5_1_assertion': """{
     "recipient": "sha256$85c4196c5516561cef673642157499b70066cb1070852b2a37fdbf3cc599b087",
     "salt": "sel gris",
     "issued_on": "2011-06-01",
@@ -54,7 +54,7 @@ test_components = {
         }
     }
 }""",
-'1_0_basic_assertion_with_extra_properties': """{
+    '1_0_basic_assertion_with_extra_properties': """{
     "uid":"123abc",
     "recipient": {"identity": "test@example.com","hashed": false, "type": "email"},
     "badge": "http://a.com/badgeclass",
@@ -62,8 +62,8 @@ test_components = {
     "verify": {"type": "hosted", "url": "http://a.com/instance3"},
     "snood":"a very fun video game"
 }""",
-# Assertion awarded to nobody@example.org
-'1_1_basic_assertion': """{
+    # Assertion awarded to nobody@example.org
+    '1_1_basic_assertion': """{
   "@context": "https://w3id.org/openbadges/v1",
   "type": "Assertion",
   "id": "https://example.org/beths-robotics-badge.json",
@@ -81,7 +81,7 @@ test_components = {
     "type": "hosted"
   }
 }""",
-'1_1_basic_badgeclass': """{
+    '1_1_basic_badgeclass': """{
   "@context": "https://w3id.org/openbadges/v1",
   "type": "BadgeClass",
   "id": "https://example.org/robotics-badge.json",
@@ -91,7 +91,7 @@ test_components = {
   "criteria": "https://example.org/robotics-badge.html",
   "issuer": "https://example.org/organization.json"
 }""",
-'1_1_basic_issuer': """{
+    '1_1_basic_issuer': """{
   "@context": "https://w3id.org/openbadges/v1",
   "type": "Issuer",
   "id": "https://example.org/organization.json",
@@ -99,8 +99,8 @@ test_components = {
   "url": "https://example.org",
   "email": "contact@example.org"
 }""",
-# Assertion awarded to nobody@example.org
-'2_0_basic_assertion': """{
+    # Assertion awarded to nobody@example.org
+    '2_0_basic_assertion': """{
   "@context": "https://w3id.org/openbadges/v2",
   "type": "Assertion",
   "id": "https://example.org/beths-robotics-badge.json",
@@ -118,7 +118,7 @@ test_components = {
     "type": "hosted"
   }
 }""",
-'2_0_basic_badgeclass': """{
+    '2_0_basic_badgeclass': """{
   "@context": "https://w3id.org/openbadges/v2",
   "type": "BadgeClass",
   "id": "https://example.org/robotics-badge.json",
@@ -128,7 +128,7 @@ test_components = {
   "criteria": "https://example.org/robotics-badge.html",
   "issuer": "https://example.org/organization.json"
 }""",
-'2_0_basic_issuer': """{
+    '2_0_basic_issuer': """{
   "@context": "https://w3id.org/openbadges/v2",
   "type": "Issuer",
   "id": "https://example.org/organization.json",
@@ -136,10 +136,47 @@ test_components = {
   "url": "https://example.org",
   "email": "contact@example.org"
 }""",
-'openbadges_context': """
-{"@context": {"issuedOn": {"@id": "obi:issueDate", "@type": "xsd:dateTime"}, "AlignmentObject": "schema:AlignmentObject", "uid": {"@id": "obi:uid"}, "claim": {"@id": "cred:claim", "@type": "@id"}, "targetCode": {"@id": "obi:targetCode"}, "image": {"@id": "schema:image", "@type": "@id"}, "Endorsement": "cred:Credential", "Assertion": "obi:Assertion", "related": {"@id": "dc:relation", "@type": "@id"}, "evidence": {"@id": "obi:evidence", "@type": "@id"}, "sec": "https://w3id.org/security#", "Criteria": "obi:Criteria", "owner": {"@id": "sec:owner", "@type": "@id"}, "revocationList": {"@id": "obi:revocationList", "@type": "@id"}, "targetName": {"@id": "schema:targetName"}, "id": "@id", "alignment": {"@id": "obi:alignment", "@type": "@id"}, "allowedOrigins": {"@id": "obi:allowedOrigins"}, "Profile": "obi:Profile", "startsWith": {"@id": "http://purl.org/dqm-vocabulary/v1/dqm#startsWith"}, "author": {"@id": "schema:author", "@type": "@id"}, "FrameValidation": "obi:FrameValidation", "validationFrame": "obi:validationFrame", "creator": {"@id": "dc:creator", "@type": "@id"}, "validationSchema": "obi:validationSchema", "validatesType": "obi:validatesType", "version": {"@id": "schema:version"}, "BadgeClass": "obi:BadgeClass", "endorsement": {"@id": "cred:credential", "@type": "@id"}, "revocationReason": {"@id": "obi:revocationReason"}, "RevocationList": "obi:RevocationList", "issuer": {"@id": "obi:issuer", "@type": "@id"}, "type": "@type", "email": {"@id": "schema:email"}, "targetDescription": {"@id": "schema:targetDescription"}, "schema": "http://schema.org/", "targetUrl": {"@id": "schema:targetUrl"}, "criteria": {"@id": "obi:criteria", "@type": "@id"}, "verificationProperty": {"@id": "obi:verificationProperty"}, "description": {"@id": "schema:description"}, "Extension": "obi:Extension", "tags": {"@id": "schema:keywords"}, "CryptographicKey": "sec:Key", "expires": {"@id": "sec:expiration", "@type": "xsd:dateTime"}, "hosted": "obi:HostedBadge", "dc": "http://purl.org/dc/terms/", "telephone": {"@id": "schema:telephone"}, "publicKey": {"@id": "sec:publicKey", "@type": "@id"}, "badge": {"@id": "obi:badge", "@type": "@id"}, "endorsementComment": {"@id": "obi:endorsementComment"}, "genre": {"@id": "schema:genre"}, "hashed": {"@id": "obi:hashed", "@type": "xsd:boolean"}, "recipient": {"@id": "obi:recipient", "@type": "@id"}, "HostedBadge": "obi:HostedBadge", "identity": {"@id": "obi:identityHash"}, "revoked": {"@id": "obi:revoked", "@type": "xsd:boolean"}, "verify": "verification", "VerificationObject": "obi:VerificationObject", "name": {"@id": "schema:name"}, "publicKeyPem": {"@id": "sec:publicKeyPem"}, "obi": "https://w3id.org/openbadges#", "url": {"@id": "schema:url", "@type": "@id"}, "cred": "https://w3id.org/credentials#", "Image": "obi:Image", "created": {"@id": "dc:created", "@type": "xsd:dateTime"}, "IdentityObject": "obi:IdentityObject", "signed": "obi:SignedBadge", "Evidence": "obi:Evidence", "narrative": {"@id": "obi:narrative"}, "caption": {"@id": "schema:caption"}, "audience": {"@id": "obi:audience"}, "extensions": "https://w3id.org/openbadges/extensions#", "verification": {"@id": "obi:verify", "@type": "@id"}, "xsd": "http://www.w3.org/2001/XMLSchema#", "TypeValidation": "obi:TypeValidation", "revokedAssertions": {"@id": "obi:revoked"}, "SignedBadge": "obi:SignedBadge", "validation": "obi:validation", "salt": {"@id": "obi:salt"}, "targetFramework": {"@id": "schema:targetFramework"}, "Issuer": "obi:Issuer"}}
+    'openbadges_context': """
+{"@context": {"issuedOn": {"@id": "obi:issueDate", "@type": "xsd:dateTime"}, "AlignmentObject":
+"schema:AlignmentObject", "uid": {"@id": "obi:uid"}, "claim": {"@id": "cred:claim", "@type": "@id"},
+"targetCode": {"@id": "obi:targetCode"}, "image": {"@id": "schema:image", "@type": "@id"},
+"Endorsement": "cred:Credential", "Assertion": "obi:Assertion", "related": {"@id": "dc:relation",
+ "@type": "@id"}, "evidence": {"@id": "obi:evidence", "@type": "@id"}, "sec": "https://w3id.org/security#",
+ "Criteria": "obi:Criteria", "owner": {"@id": "sec:owner", "@type": "@id"},
+ "revocationList": {"@id": "obi:revocationList", "@type": "@id"},
+ "targetName": {"@id": "schema:targetName"}, "id": "@id", "alignment": {"@id": "obi:alignment", "@type": "@id"},
+ "allowedOrigins": {"@id": "obi:allowedOrigins"}, "Profile": "obi:Profile",
+ "startsWith": {"@id": "http://purl.org/dqm-vocabulary/v1/dqm#startsWith"},
+ "author": {"@id": "schema:author", "@type": "@id"}, "FrameValidation": "obi:FrameValidation",
+ "validationFrame": "obi:validationFrame", "creator": {"@id": "dc:creator", "@type": "@id"},
+ "validationSchema": "obi:validationSchema", "validatesType": "obi:validatesType",
+ "version": {"@id": "schema:version"}, "BadgeClass": "obi:BadgeClass",
+ "endorsement": {"@id": "cred:credential", "@type": "@id"}, "revocationReason": {"@id": "obi:revocationReason"},
+ "RevocationList": "obi:RevocationList", "issuer": {"@id": "obi:issuer", "@type": "@id"}, "type": "@type",
+ "email": {"@id": "schema:email"}, "targetDescription": {"@id": "schema:targetDescription"},
+ "schema": "http://schema.org/", "targetUrl": {"@id": "schema:targetUrl"},
+ "criteria": {"@id": "obi:criteria", "@type": "@id"}, "verificationProperty": {"@id": "obi:verificationProperty"},
+ "description": {"@id": "schema:description"}, "Extension": "obi:Extension", "tags": {"@id": "schema:keywords"},
+ "CryptographicKey": "sec:Key", "expires": {"@id": "sec:expiration", "@type": "xsd:dateTime"}, "hosted":
+ "obi:HostedBadge", "dc": "http://purl.org/dc/terms/", "telephone": {"@id": "schema:telephone"},
+ "publicKey": {"@id": "sec:publicKey", "@type": "@id"}, "badge": {"@id": "obi:badge", "@type": "@id"},
+ "endorsementComment": {"@id": "obi:endorsementComment"}, "genre": {"@id": "schema:genre"},
+ "hashed": {"@id": "obi:hashed", "@type": "xsd:boolean"}, "recipient": {"@id": "obi:recipient", "@type": "@id"},
+ "HostedBadge": "obi:HostedBadge", "identity": {"@id": "obi:identityHash"},
+ "revoked": {"@id": "obi:revoked", "@type": "xsd:boolean"}, "verify": "verification",
+ "VerificationObject": "obi:VerificationObject", "name": {"@id": "schema:name"},
+ "publicKeyPem": {"@id": "sec:publicKeyPem"}, "obi": "https://w3id.org/openbadges#",
+ "url": {"@id": "schema:url", "@type": "@id"}, "cred": "https://w3id.org/credentials#",
+ "Image": "obi:Image", "created": {"@id": "dc:created", "@type": "xsd:dateTime"},
+ "IdentityObject": "obi:IdentityObject", "signed": "obi:SignedBadge", "Evidence": "obi:Evidence",
+ "narrative": {"@id": "obi:narrative"}, "caption": {"@id": "schema:caption"},
+ "audience": {"@id": "obi:audience"}, "extensions": "https://w3id.org/openbadges/extensions#",
+ "verification": {"@id": "obi:verify", "@type": "@id"}, "xsd": "http://www.w3.org/2001/XMLSchema#",
+ "TypeValidation": "obi:TypeValidation", "revokedAssertions": {"@id": "obi:revoked"}, "SignedBadge":
+ "obi:SignedBadge", "validation": "obi:validation", "salt": {"@id": "obi:salt"},
+ "targetFramework": {"@id": "schema:targetFramework"}, "Issuer": "obi:Issuer"}}
 """,
-'openbadges_context_v1': """{
+    'openbadges_context_v1': """{
   "@context": [
   {
     "id": "@id",
@@ -246,7 +283,6 @@ test_components = {
     "description": { "@id": "schema:description" },
     "url": { "@id": "schema:url", "@type": "@id" },
     "image": { "@id": "schema:image", "@type": "@id" },
- 
     "uid": { "@id": "obi:uid" },
     "recipient": { "@id": "obi:recipient", "@type": "@id" },
     "hashed": { "@id": "obi:hashed", "@type": "xsd:boolean" },

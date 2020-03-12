@@ -2,11 +2,11 @@ import unittest
 
 from pydux import create_store
 
-from openbadges.verifier.reducers import main_reducer
 from openbadges.verifier.actions.tasks import add_task, resolve_task
+from openbadges.verifier.reducers import main_reducer
 from openbadges.verifier.reducers.tasks import _new_state_with_updated_item
-from openbadges.verifier.tasks.utils import abbreviate_value
 from openbadges.verifier.state import INITIAL_STATE, filter_active_tasks
+from openbadges.verifier.tasks.utils import abbreviate_value
 
 
 class TaskActionTests(unittest.TestCase):
@@ -39,7 +39,6 @@ class TaskActionTests(unittest.TestCase):
         tasks = self.store.get_state().get('tasks')
         self.assertTrue(tasks[0]['complete'])
         self.assertEqual(len(filter_active_tasks(self.store.get_state())), 0)
-
 
     def test_task_updater_internals(self):
         initial = [{'task_id': 1}, {'task_id': 2}, {'task_id': 3}]

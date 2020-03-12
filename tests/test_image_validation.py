@@ -1,15 +1,16 @@
 import os.path
-from requests_cache import CachedSession
-import responses
 import unittest
 
-from openbadges.verifier.actions.tasks import add_task
+import responses
+from requests_cache import CachedSession
+
 from openbadges.verifier.actions.action_types import STORE_ORIGINAL_RESOURCE
+from openbadges.verifier.actions.tasks import add_task
 from openbadges.verifier.reducers.input import input_reducer
 from openbadges.verifier.tasks import task_named
-from openbadges.verifier.tasks.validation import OBClasses
 from openbadges.verifier.tasks.task_types import (IMAGE_VALIDATION, VALIDATE_EXPECTED_NODE_CLASS)
 from openbadges.verifier.tasks.utils import is_data_uri
+from openbadges.verifier.tasks.validation import OBClasses
 from openbadges.verifier.utils import CachableDocumentLoader
 
 
@@ -78,7 +79,8 @@ class ImageValidationTests(unittest.TestCase):
         next_task = actions[0]
         self.assertEqual(next_task['type'], STORE_ORIGINAL_RESOURCE)
         new_state = input_reducer({}, next_task)
-        self.assertTrue(new_state['original_json'][image_url].startswith('data:'), "Data is stored in the expected spot.")
+        self.assertTrue(new_state['original_json'][image_url].startswith('data:'),
+                        "Data is stored in the expected spot.")
 
     def test_base64_data_uri_in_badgeclass(self):
         data_uri = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mOUMyqsBwACeQFChxl' \

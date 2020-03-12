@@ -1,11 +1,12 @@
 # coding=utf-8
-from datetime import datetime, timedelta
 import json
+import unittest
+from datetime import datetime, timedelta
+
+import responses
+from pydux import create_store
 from pyld import jsonld
 from pytz import utc
-from pydux import create_store
-import responses
-import unittest
 
 from openbadges.verifier.actions.action_types import ADD_TASK, PATCH_NODE
 from openbadges.verifier.actions.graph import add_node, patch_node
@@ -14,14 +15,15 @@ from openbadges.verifier.openbadges_context import OPENBADGES_CONTEXT_V2_DICT
 from openbadges.verifier.reducers import main_reducer
 from openbadges.verifier.state import filter_active_tasks, INITIAL_STATE
 from openbadges.verifier.tasks import task_named, run_task
-from openbadges.verifier.tasks.validation import (_get_validation_actions, assertion_timestamp_checks,
-                                         criteria_property_dependencies, detect_and_validate_node_class,
-                                         OBClasses, PrimitiveValueValidator, validate_property, ValueTypes,)
-from openbadges.verifier.tasks.verification import (_default_verification_policy, hosted_id_in_verification_scope,)
 from openbadges.verifier.tasks.task_types import (ASSERTION_TIMESTAMP_CHECKS, CRITERIA_PROPERTY_DEPENDENCIES,
-                                         DETECT_AND_VALIDATE_NODE_CLASS, HOSTED_ID_IN_VERIFICATION_SCOPE,
-                                         IDENTITY_OBJECT_PROPERTY_DEPENDENCIES, ISSUER_PROPERTY_DEPENDENCIES,
-                                         VALIDATE_RDF_TYPE_PROPERTY, VALIDATE_PROPERTY, VALIDATE_EXPECTED_NODE_CLASS)
+                                                  DETECT_AND_VALIDATE_NODE_CLASS, HOSTED_ID_IN_VERIFICATION_SCOPE,
+                                                  IDENTITY_OBJECT_PROPERTY_DEPENDENCIES, ISSUER_PROPERTY_DEPENDENCIES,
+                                                  VALIDATE_RDF_TYPE_PROPERTY, VALIDATE_PROPERTY,
+                                                  VALIDATE_EXPECTED_NODE_CLASS)
+from openbadges.verifier.tasks.validation import (_get_validation_actions, assertion_timestamp_checks,
+                                                  criteria_property_dependencies, detect_and_validate_node_class,
+                                                  OBClasses, PrimitiveValueValidator, validate_property, ValueTypes, )
+from openbadges.verifier.tasks.verification import (hosted_id_in_verification_scope, )
 from openbadges.verifier.utils import MESSAGE_LEVEL_WARNING
 from openbadges.verifier.verifier import call_task, verify
 
@@ -38,7 +40,8 @@ class PropertyValidationTests(unittest.TestCase):
     def test_data_uri_validation(self):
         validator = PrimitiveValueValidator(ValueTypes.DATA_URI)
         good_uris = ('data:image/gif;base64,R0lGODlhyAAiALM...DfD0QAADs=',
-                     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
+                     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAA'
+                     'AHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
                      'data:text/plain;charset=UTF-8;page=21,the%20data:1234,5678',
                      'data:text/vnd-example+xyz;foo=bar;base64,R0lGODdh',
                      'data:,actually%20a%20valid%20data%20URI',
@@ -54,7 +57,8 @@ class PropertyValidationTests(unittest.TestCase):
     def test_data_uri_or_url_validation(self):
         validator = PrimitiveValueValidator(ValueTypes.DATA_URI_OR_URL)
         good_uris = ('data:image/gif;base64,R0lGODlhyAAiALM...DfD0QAADs=',
-                     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
+                     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI'
+                     '12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
                      'data:text/plain;charset=UTF-8;page=21,the%20data:1234,5678',
                      'data:text/vnd-example+xyz;foo=bar;base64,R0lGODdh',
                      'http://www.example.com:8080/', 'http://www.example.com:8080/foo/bar',
@@ -82,13 +86,9 @@ class PropertyValidationTests(unittest.TestCase):
                      'http://foo.com/blah_(wikipedia)#cite-1', 'http://a.b-c.de',
                      'http://userid:password@example.com/', "http://-.~:%40:80%2f:password@example.com",
                      'http://code.google.com/events/#&product=browser')
-        good_urls_that_fail = ('http://✪df.ws/123', 'http://عمان.icom.museum/',)  # TODO: Discuss support for these
         bad_urls = ('data:image/gif;base64,R0lGODlhyAAiALM...DfD0QAADs=', '///', '///f', '//',
                     'rdar://12345', 'h://test', 'http:// shouldfail.com', ':// should fail', '', 'a',
                     'urn:uuid:129487129874982374', 'urn:uuid:9d278beb-36cf-4bc8-888d-674ff9843d72')
-        bad_urls_that_pass = ('http://', 'http://../', 'http://foo.bar?q=Spaces should be encoded',
-                                          'http://f', 'http://-error-.invalid/', 'http://.www.foo.bar./',)
-
         for url in good_urls:
             self.assertTrue(validator(url), "`{}` should pass URL validation but failed.".format(url))
         for url in bad_urls:
@@ -101,10 +101,8 @@ class PropertyValidationTests(unittest.TestCase):
                      'urn:uuid:9d278beb-36cf-4bc8-888d-674ff9843d72',
                      'urn:uuid:9D278beb-36cf-4bc8-888d-674ff9843d72'
                      )
-        good_iris_that_fail = ()  # TODO: Discuss support for these
         bad_iris = ('data:image/gif;base64,R0lGODlhyAAiALM...DfD0QAADs=', 'urn:uuid', 'urn:uuid:123',
                     '', 'urn:uuid:', 'urn:uuid:zz278beb-36cf-4bc8-888d-674ff9843d72',)
-        bad_iris_that_pass = ()
 
         for url in good_iris:
             self.assertTrue(validator(url), "`{}` should pass IRI validation but failed.".format(url))
@@ -294,7 +292,7 @@ class PropertyValidationTaskTests(unittest.TestCase):
         )
 
     def test_basic_id_validation(self):
-        ## test assumes that a node's ID must be an IRI
+        # test assumes that a node's ID must be an IRI
         first_node = {'id': 'http://example.com/1'}
         state = {
             'graph': [first_node]
@@ -312,8 +310,8 @@ class PropertyValidationTaskTests(unittest.TestCase):
         self.assertEqual(len(actions), 0)
 
     def test_basic_image_prop_validation(self):
-        _VALID_DATA_URI = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
-        _VALID_IMAGE_URL = 'http://example.com/images/foo.png'
+        _VALID_DATA_URI = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQ' \
+                          'VQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='
         _INVALID_URI = 'notanurl'
         first_node = {'id': 'http://example.com/1',
                       'image_prop': _VALID_DATA_URI}
@@ -534,14 +532,14 @@ class PropertyValidationTaskTests(unittest.TestCase):
 
         values = (
             ['one', 'two', 'three'],  # values[0]
-            'one',                    # values[1]
-            1,                        # values[2]
-            ['one', 2, 'three'],      # values[3]
-            [],                       # values[4]
-            None,                     # values[5]
-            [None],                   # values[6]
-            [None, None],             # values[7] Always fail
-            [None, 'one', None]       # values[8] Always fail
+            'one',  # values[1]
+            1,  # values[2]
+            ['one', 2, 'three'],  # values[3]
+            [],  # values[4]
+            None,  # values[5]
+            [None],  # values[6]
+            [None, None],  # values[7] Always fail
+            [None, 'one', None]  # values[8] Always fail
         )
 
         task_config = {
@@ -550,6 +548,7 @@ class PropertyValidationTaskTests(unittest.TestCase):
         }
 
         t_result = t_message = t_actions = None
+
         def run(i, expect_success, message):
             first_node['tags'] = values[i]
             task = add_task(VALIDATE_PROPERTY, **task_config)
@@ -774,7 +773,6 @@ class IDPropertyValidationTests(unittest.TestCase):
             self.assertEqual(a['node_path'], [first_node['id'], 'alignment', 0])
             next_result, next_message, next_actions = task_named(a['name'])(state, a)
             self.assertTrue(next_result)
-
 
 
 class NodeTypeDetectionTasksTests(unittest.TestCase):
@@ -1052,7 +1050,7 @@ class ClassValidationTaskTests(unittest.TestCase):
         result, message, actions = validate_property(badgeclass_state, task)
         self.assertTrue(result, "Class validation of image property as data node in BadgeClass should succeed.")
 
-        task['node_id']=assertion_node['id']
+        task['node_id'] = assertion_node['id']
         result, message, actions = validate_property(assertion_state, task)
         self.assertTrue(result, "Class validation of image property as uri node in Assertion should succeed.")
 
@@ -1119,13 +1117,13 @@ class RdfTypeValidationTests(unittest.TestCase):
         }
 
         test_types = (
-            ('BadgeClass',                   True),
-            (['Issuer', 'Extension'],        True),
-            ('AlignmentObject',              True),
+            ('BadgeClass', True),
+            (['Issuer', 'Extension'], True),
+            ('AlignmentObject', True),
             ('http://example.com/CoolClass', True),
-            ('NotAKnownClass',               False),
-            ([],                             False),
-            (['Issuer', 'UNKNOWN'],          False),
+            ('NotAKnownClass', False),
+            ([], False),
+            (['Issuer', 'UNKNOWN'], False),
         )
 
         for type_value, expected_result in test_types:
@@ -1228,7 +1226,7 @@ class VerificationObjectValiationTests(unittest.TestCase):
                 'allowedOrigins': ['example.com']
             }
         }
-        state = {'graph':[issuer]}
+        state = {'graph': [issuer]}
         task = add_task(
             VALIDATE_PROPERTY, node_path=[issuer['id'], 'verification'],
             prop_name='allowedOrigins', prop_type=ValueTypes.URL_AUTHORITY, many=True
@@ -1239,7 +1237,6 @@ class VerificationObjectValiationTests(unittest.TestCase):
         issuer['verification']['allowedOrigins'] = ['http://mary.had/a-little-lamb']
         result, message, actions = run_task(state, task)
         self.assertFalse(result)
-
 
     def test_hosted_verification_object_in_assertion(self):
         assertion = {
@@ -1317,7 +1314,6 @@ class AssertionTimeStampValidationTests(unittest.TestCase):
 
         result, message, actions = assertion_timestamp_checks(state, task_meta)
         self.assertFalse(result)
-
 
     def test_assertion_not_expires_before_issue(self):
         machine_time_now = datetime.now(utc)

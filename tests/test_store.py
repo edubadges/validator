@@ -1,23 +1,15 @@
-import responses
 import unittest
 
 from pydux import create_store
 
-from openbadges.verifier import verify
-from openbadges.verifier.reducers import main_reducer
-from openbadges.verifier.state import (filter_active_tasks, INITIAL_STATE, get_node_by_id,
-                              get_node_by_path,)
-
-try:
-    from .testfiles.test_components import test_components
-except (ImportError, SystemError):
-    from .testfiles.test_components import test_components
+from openbadges.verifier.state import (filter_active_tasks, INITIAL_STATE, get_node_by_path, )
 
 
 class InitializationTests(unittest.TestCase):
     def test_store_initialization(self):
         def no_op(state, action):
             return state
+
         store = create_store(no_op, INITIAL_STATE)
         self.assertEqual(store.get_state(), INITIAL_STATE)
 

@@ -60,14 +60,16 @@ class RelatedObjectTests(unittest.TestCase):
             'type': 'BadgeClass',
             '@language': 'es',
             'issuer': 'http://example.com/issuer',
-            'related': [{
-                'id': 'http://example.com/other_badgeclass',
-                '@language': 'en-US'
-            },
-            {
-                'id': 'http://example.com/another_badgeclass',
-                '@language': 'fi'
-            }],
+            'related': [
+                {
+                    'id': 'http://example.com/other_badgeclass',
+                    '@language': 'en-US'
+                },
+                {
+                    'id': 'http://example.com/another_badgeclass',
+                    '@language': 'fi'
+                }
+            ],
             'name': 'Insignia Pronto'
         }
         state = {'graph': [assertion, badgeclass]}

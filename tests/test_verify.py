@@ -1,7 +1,8 @@
 import os
-import responses
 import unittest
 
+import responses
+from openbadges_bakery import bake
 from pydux import create_store
 
 from openbadges.verifier.actions.input import store_original_resource
@@ -12,8 +13,6 @@ from openbadges.verifier.tasks import task_named
 from openbadges.verifier.tasks.task_types import VALIDATE_PROPERTY
 from openbadges.verifier.tasks.validation import ValueTypes
 from openbadges.verifier.verifier import call_task, generate_report, verify
-
-from openbadges_bakery import bake
 
 try:
     from tests.testfiles.test_components import test_components
@@ -27,6 +26,7 @@ class InitializationTests(unittest.TestCase):
     def test_store_initialization(self):
         def no_op(state, action):
             return state
+
         store = create_store(no_op, INITIAL_STATE)
         self.assertEqual(store.get_state(), INITIAL_STATE)
 

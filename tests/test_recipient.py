@@ -1,7 +1,8 @@
 import hashlib
 import json
-import responses
 import unittest
+
+import responses
 
 from openbadges.verifier.actions.tasks import add_task
 from openbadges.verifier.openbadges_context import OPENBADGES_CONTEXT_V2_DICT
@@ -92,7 +93,8 @@ class RecipientProfileVerificationTests(unittest.TestCase):
             'type': 'email',
             'hashed': True,
             'salt': 'Maldon',
-            'identity': 'sha256$' + hashlib.sha256(recipient_profile['email'].encode('utf8') + 'Maldon'.encode('utf8')).hexdigest()
+            'identity': 'sha256$' + hashlib.sha256(
+                recipient_profile['email'].encode('utf8') + 'Maldon'.encode('utf8')).hexdigest()
         }
 
         state = {'graph': [recipient_profile, assertion, identity_object]}

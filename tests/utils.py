@@ -1,8 +1,8 @@
 import os
+
 import responses
 
 from openbadges.verifier.openbadges_context import OPENBADGES_CONTEXT_V2_URI
-
 from .testfiles.test_components import test_components
 
 

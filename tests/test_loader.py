@@ -1,8 +1,9 @@
 import json
+import unittest
+
+import responses
 from pyld import jsonld
 from requests_cache import CachedSession
-import responses
-import unittest
 
 from openbadges.verifier.utils import CachableDocumentLoader
 

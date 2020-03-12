@@ -1,20 +1,20 @@
 import json
 import os
-import responses
 import unittest
 
+import responses
+
 from openbadges.verifier.actions.action_types import SET_OPENBADGES_VERSION, SET_VALIDATION_SUBJECT, REPORT_MESSAGE
-from openbadges.verifier.actions.tasks import add_task
 from openbadges.verifier.actions.input import store_input
+from openbadges.verifier.actions.tasks import add_task
 from openbadges.verifier.openbadges_context import OPENBADGES_CONTEXT_V1_URI, OPENBADGES_CONTEXT_V2_URI
 from openbadges.verifier.reducers import main_reducer
+from openbadges.verifier.state import INITIAL_STATE
+from openbadges.verifier.tasks import run_task, task_named
 from openbadges.verifier.tasks.task_types import (DETECT_INPUT_TYPE, FETCH_HTTP_NODE, INTAKE_JSON, JSONLD_COMPACT_DATA,
                                                   UPGRADE_0_5_NODE, UPGRADE_1_0_NODE, UPGRADE_1_1_NODE)
-from openbadges.verifier.tasks import run_task, task_named
-from openbadges.verifier.state import INITIAL_STATE
 from openbadges.verifier.tasks.validation import OBClasses
 from openbadges.verifier.verifier import generate_report, verification_store, verify
-
 from .testfiles.test_components import test_components
 
 

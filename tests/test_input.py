@@ -1,24 +1,23 @@
-from base64 import b64encode
-from Crypto.PublicKey import RSA
 import json
-from jose import jws
 import os
-from pydux import create_store
-import responses
 import unittest
-import sys
 
-from openbadges.verifier.actions.input import set_input_type, store_input
+import responses
+from Crypto.PublicKey import RSA
+from jose import jws
+from openbadges_bakery import bake
+from pydux import create_store
+
 from openbadges.verifier.actions.action_types import SET_VALIDATION_SUBJECT, STORE_INPUT, STORE_ORIGINAL_RESOURCE
+from openbadges.verifier.actions.input import set_input_type, store_input
 from openbadges.verifier.actions.tasks import add_task
-from openbadges.verifier.tasks.task_types import DETECT_INPUT_TYPE
 from openbadges.verifier.reducers import main_reducer
 from openbadges.verifier.state import INITIAL_STATE
 from openbadges.verifier.tasks import run_task
 from openbadges.verifier.tasks.input import detect_input_type, process_baked_resource
+from openbadges.verifier.tasks.task_types import DETECT_INPUT_TYPE
 from openbadges.verifier.tasks.task_types import FETCH_HTTP_NODE, PROCESS_BAKED_RESOURCE
 from openbadges.verifier.utils import MESSAGE_LEVEL_ERROR
-from openbadges_bakery import bake
 
 try:
     from tests.testfiles.test_components import test_components
@@ -103,7 +102,8 @@ class InputTaskTests(unittest.TestCase):
             "issued_on": "2012-12-28",
             "badge": {
                 "name": "Completed Rails for Zombies Redux",
-                "image": "https://d1ffx7ull4987f.cloudfront.net/images/achievements/large_badge/133/completed-rails-for-zombies-redux-0f73c361c3d5070ca2fa7951e65cbf39.png",
+                "image": "https://d1ffx7ull4987f.cloudfront.net/images/achievements/large_badge/133"
+                         "/completed-rails-for-zombies-redux-0f73c361c3d5070ca2fa7951e65cbf39.png",
                 "description": "Awarded for the completion of Rails for Zombies Redux",
                 "version": "0.5.0",
                 "criteria": "https://www.codeschool.com/users/mrmickca/badges/133",
@@ -244,7 +244,25 @@ class InputImageUrlTests(unittest.TestCase):
         state = {
             'input': {
                 'original_json': {
-                    image_url: b'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAATCAYAAAB/TkaLAAAALWlUWHRvcGVuYmFkZ2VzAAAAAABodHRwOi8vZXhhbXBsZS5vcmcvYXNzZXJ0aW9uLzFq+wCZAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAACtUlEQVQ4y6XRS08TURjG8eec6UxbekmvtFAU0pIajFANxhKNQV2gRF24dOFnUFE3BiMuJUSXLvwCxhhjNCExCiaQECJSqIgXlBgNhd6k9D5tZ+a4kBrAVpH+V5M5b37vyQzBhlivv+mtKCzyILxQpyO6FgdLx9ZWvQ+f2Mozn3qOfSWK1Ojq7sp+mwiYjG3NSVc64if3hxfKM6T8EOw9+SW3HPF4PE5IggBZUcBrBQhWE0rUmDY+frov6m4KClqNCXo1ZL0hSwtFndpsRI4CKl79oGHw3vnf6Mdzp0ZCn5dOeJ1WJNYyMbkk2cvLOIEPKyXJXG/XXxeLzJ9K5/xMVprL55Tjfljb3VbFbITLZrrG9d8ZIgAw2rlf8TY6WOx7WAIgoHLLABqrnMnOIz4qO6xounmXktc+3zMB5AzAZhhwADtMpdWEXN0drkKBzdGcLPVoCGG1gAAg5UVXaTUJScXtpSXGVLVgG1MkBcVYnFKZSCVRlggApVaTEgrIDLQBmhtxKOAICdYiauvNOU4uQVcnLBIAeNTmVTy8hoCQEADXDswVZ4uzIbQUx8HpaUIBoOvDwm7GMKal9DmAlf/RCBC2W4xj1OWY7zx+6ML6u18xgEy3tw/oeX6XKMu9DHBuw4zYLIbRYjK36g4E+ghQBAC6YSPrnJsbCBfFFYHjhgFE/gFGrWbjKzGRSbgDgStlcBNahrvfve+PFsWIhuOHAUSrgDGbxTgiJjOJ1tnZPgIUtjh/xgAy3tFx20GpPcfYaQD2zaDhZXYtm9ozM3NxK1gVXYfphM83aCXEkmfsLAAbgLjVYnhRTIlJz/SbywQQq/y86jFAPe7zDdUTosszdthsMQRKGSnROjXZV+mGFb9phY2Fo8Hg1SVFypv0Wian8snWqclLfwO3HQPU837/LQbw25n/Cf7NEg3as9WWAAAAAElFTkSuQmCC'
+                    image_url: b'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAATCAYAAAB/'
+                               b'TkaLAAAALWlUWHRvcGVuYmFkZ2VzAAAAAABodHRwOi8vZXhhbXBsZS5vcmcvYX'
+                               b'NzZXJ0aW9uLzFq+wCZAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAAL'
+                               b'EwEAmpwYAAACtUlEQVQ4y6XRS08TURjG8eec6UxbekmvtFAU0pIajFANxhKNQV'
+                               b'2gRF24dOFnUFE3BiMuJUSXLvwCxhhjNCExCiaQECJSqIgXlBgNhd6k9D5tZ+a4'
+                               b'kBrAVpH+V5M5b37vyQzBhlivv+mtKCzyILxQpyO6FgdLx9ZWvQ+f2Mozn3qOfS'
+                               b'WK1Ojq7sp+mwiYjG3NSVc64if3hxfKM6T8EOw9+SW3HPF4PE5IggBZUcBrBQhW'
+                               b'E0rUmDY+frov6m4KClqNCXo1ZL0hSwtFndpsRI4CKl79oGHw3vnf6Mdzp0ZCn5'
+                               b'dOeJ1WJNYyMbkk2cvLOIEPKyXJXG/XXxeLzJ9K5/xMVprL55Tjfljb3VbFbITL'
+                               b'ZrrG9d8ZIgAw2rlf8TY6WOx7WAIgoHLLABqrnMnOIz4qO6xounmXktc+3zMB5A'
+                               b'zAZhhwADtMpdWEXN0drkKBzdGcLPVoCGG1gAAg5UVXaTUJScXtpSXGVLVgG1Mk'
+                               b'BcVYnFKZSCVRlggApVaTEgrIDLQBmhtxKOAICdYiauvNOU4uQVcnLBIAeNTmVT'
+                               b'y8hoCQEADXDswVZ4uzIbQUx8HpaUIBoOvDwm7GMKal9DmAlf/RCBC2W4xj1OWY'
+                               b'7zx+6ML6u18xgEy3tw/oeX6XKMu9DHBuw4zYLIbRYjK36g4E+ghQBAC6YSPrnJ'
+                               b'sbCBfFFYHjhgFE/gFGrWbjKzGRSbgDgStlcBNahrvfve+PFsWIhuOHAUSrgDGb'
+                               b'xTgiJjOJ1tnZPgIUtjh/xgAy3tFx20GpPcfYaQD2zaDhZXYtm9ozM3NxK1gVXY'
+                               b'fphM83aCXEkmfsLAAbgLjVYnhRTIlJz/SbywQQq/y86jFAPe7zDdUTosszdths'
+                               b'MQRKGSnROjXZV+mGFb9phY2Fo8Hg1SVFypv0Wian8snWqclLfwO3HQPU837/LQ'
+                               b'bw25n/Cf7NEg3as9WWAAAAAElFTkSuQmCC'
                 }
             }
         }

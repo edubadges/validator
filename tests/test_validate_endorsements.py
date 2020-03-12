@@ -1,14 +1,13 @@
-import responses
 import unittest
 
+import responses
+
+from openbadges import verify
 from openbadges.verifier.actions.tasks import add_task
 from openbadges.verifier.openbadges_context import OPENBADGES_CONTEXT_V2_URI
 from openbadges.verifier.tasks import run_task
 from openbadges.verifier.tasks.task_types import VALIDATE_EXPECTED_NODE_CLASS
 from openbadges.verifier.tasks.validation import OBClasses
-from openbadges import verify
-
-
 from .utils import set_up_context_mock, set_up_image_mock
 
 
@@ -98,13 +97,15 @@ class EndorsementTests(unittest.TestCase):
         set_up_context_mock()
         self.set_up_resources()
 
-        for resource in [self.assertion, self.badgeclass_with_endorsement_array, self.issuer, self.endorsement, self.endorsement2, self.endorsement_issuer]:
+        for resource in [self.assertion, self.badgeclass_with_endorsement_array, self.issuer, self.endorsement,
+                         self.endorsement2, self.endorsement_issuer]:
             responses.add(responses.GET, resource['id'], json=resource)
         set_up_image_mock(self.badgeclass['image'])
 
         results = verify(self.assertion['id'])
         self.assertTrue(results['report']['valid'])
-        self.assertEqual(len(results['graph']), 6, "The graph now contains all six resources including both endorsements.")
+        self.assertEqual(len(results['graph']), 6,
+                         "The graph now contains all six resources including both endorsements.")
 
     @responses.activate
     def test_validate_endorsement_as_input(self):

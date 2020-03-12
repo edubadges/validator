@@ -115,7 +115,9 @@ def combine_contexts(*args):
             return combine_contexts(context['@context']) + combine_contexts(*args[1:])
         except KeyError:
             return [context] + combine_contexts(*args[1:])
-    elif isinstance(context, six.string_types):
+    elif isinstance(context, str):
         return [context] + combine_contexts(*args[1:])
-    elif isinstance(context, (list, tuple)):
+    elif isinstance(context, tuple):
+        return list(context) + combine_contexts(*args[1:])
+    elif isinstance(context, list):
         return context + combine_contexts(*args[1:])

@@ -1,25 +1,22 @@
 import datetime
 import json
-import responses
 import unittest
-import sys
 
-from openbadges.verifier.actions.graph import add_node
+import responses
+
 from openbadges.verifier.actions.tasks import add_task
 from openbadges.verifier.extensions import GeoLocation, ExampleExtension, ApplyLink
 from openbadges.verifier.openbadges_context import OPENBADGES_CONTEXT_V2_URI
 from openbadges.verifier.reducers import main_reducer
-from openbadges.verifier.reducers.graph import graph_reducer
 from openbadges.verifier.state import INITIAL_STATE
+from openbadges.verifier.tasks import task_named
 from openbadges.verifier.tasks.extensions import validate_extension_node
 from openbadges.verifier.tasks.graph import _get_extension_actions
-from openbadges.verifier.tasks import task_named
 from openbadges.verifier.tasks.task_types import (INTAKE_JSON, JSONLD_COMPACT_DATA, VALIDATE_EXTENSION_NODE,
-                                         VALIDATE_EXTENSION_SINGLE)
+                                                  VALIDATE_EXTENSION_SINGLE)
 from openbadges.verifier.tasks.utils import combine_contexts
 from openbadges.verifier.utils import jsonld_no_cache, CachableDocumentLoader
 from openbadges.verifier.verifier import extension_validation_store, generate_report
-
 from tests.utils import set_up_context_mock
 
 
@@ -120,13 +117,12 @@ class ExtensionNodeValidationTests(unittest.TestCase):
         self.state = INITIAL_STATE
         task = add_task(
             INTAKE_JSON, data=json.dumps(self.first_node), node_id=self.first_node['id'])
-        result, message, actions = task_named(INTAKE_JSON)(self.state, task,  **self.options)
+        result, message, actions = task_named(INTAKE_JSON)(self.state, task, **self.options)
         self.state = main_reducer(self.state, actions[0])
         result, message, actions = task_named(actions[1]['name'])(
-            self.state, actions[1],  **self.options)  # JSONLD_COMPACT_DATE
+            self.state, actions[1], **self.options)  # JSONLD_COMPACT_DATE
         self.state = main_reducer(self.state, actions[0])  # ADD_NODE
         self.validation_task = actions[1]  # VALIDATE_EXTENSION_NODE
-
 
     @responses.activate
     def test_validate_extension_node_basic(self):
@@ -182,6 +178,7 @@ class ComplexExtensionNodeValdiationTests(unittest.TestCase):
     """
     Tests for extensions that use nested properties.
     """
+
     @responses.activate
     def test_node_json_validation(self):
         node = {
@@ -397,6 +394,7 @@ class UnknownExtensionsTests(unittest.TestCase):
     TODO: In the future, dynamic discovery of extensions will be possible.
     Until then, make sure we are reporting on unverified extensions.
     """
+
     def test_report_message_on_unknown_extension(self):
         first_node = {
             'id': 'http://example.org/assertion',
@@ -420,11 +418,13 @@ class DynamicExtensionValidationTests(unittest.TestCase):
     """
     Extension validation involves establishing mocks for the context & schema resources
     """
+
     def set_up_test_extension(self):
         self.extension_schema = {
             "$schema": "http://json-schema.org/draft-04/schema#",
             "title": "1.1 Open Badge Example Extension for testing: Unknown Extension",
-            "description": "An extension that allows you to add a single string unknownProperty to an extension object for unknown reasons.",
+            "description": "An extension that allows you to add a single string unknownProperty to an extension"
+                           " object for unknown reasons.",
             "type": "object",
             "properties": {
                 "unknownProperty": {
@@ -533,12 +533,21 @@ class DynamicExtensionValidationTests(unittest.TestCase):
 class ExtensionContextCombinations(unittest.TestCase):
     def test_combine_contexts(self):
         str1, str2 = '_:str1', '_:str2'
-        dict1, dict2 = {'dict1': 'http://dict1.com'}, {'dict2': 'http://dict2.com'}
-        dict3 = {'@context': [str2, dict1]}
+        tuple1 = ({'dict1': 'http://dict1.com'}, {'dict2': 'http://dict2.com'})
+        dict3 = {'@context': [str2, tuple]}
         list1, list2 = ['_:list1', '_:list1b'], ['_:list2']
 
-        self.assertEqual(combine_contexts(str1, str2),          [str1, str2])
-        self.assertEqual(combine_contexts(str1, dict1),         [str1, dict1])
-        self.assertEqual(combine_contexts(list1, list2),        list1 + list2)
-        self.assertEqual(combine_contexts(list1, dict1, str1),  list1 + [dict1, str1])
-        self.assertEqual(combine_contexts(list1, dict3, list2), list1 + [str2, dict1] + list2)
+        contexts = combine_contexts(str1, str2)
+        self.assertListEqual(contexts, [str1, str2])
+
+        contexts = combine_contexts(str1, tuple1)
+        self.assertListEqual(contexts, [str1, tuple1[0], tuple1[1]])
+
+        contexts = combine_contexts(list1, list2)
+        self.assertListEqual(contexts, list1 + list2)
+
+        contexts = combine_contexts(list1, tuple1, str1)
+        self.assertListEqual(contexts, list1 + [tuple1[0], tuple1[1], str1])
+
+        contexts = combine_contexts(list1, dict3, list2)
+        self.assertListEqual(contexts, list1 + [str2, tuple] + list2)

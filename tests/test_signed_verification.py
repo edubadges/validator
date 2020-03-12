@@ -1,10 +1,11 @@
+import json
+import sys
+import unittest
 from base64 import b64encode
+
+import responses
 from Crypto.PublicKey import RSA
 from jose import jws
-import json
-import responses
-import unittest
-import sys
 
 from openbadges.verifier.actions.graph import patch_node
 from openbadges.verifier.actions.tasks import add_task
@@ -12,11 +13,10 @@ from openbadges.verifier.exceptions import TaskPrerequisitesError
 from openbadges.verifier.openbadges_context import OPENBADGES_CONTEXT_V2_URI
 from openbadges.verifier.reducers.graph import graph_reducer
 from openbadges.verifier.tasks.crypto import (process_jws_input, verify_key_ownership, verify_jws_signature,
-                                     verify_signed_assertion_not_revoked,)
+                                              verify_signed_assertion_not_revoked, )
 from openbadges.verifier.tasks.task_types import (PROCESS_JWS_INPUT, VERIFY_JWS, VERIFY_KEY_OWNERSHIP,
-                                         VERIFY_SIGNED_ASSERTION_NOT_REVOKED,)
+                                                  VERIFY_SIGNED_ASSERTION_NOT_REVOKED, )
 from openbadges.verifier.verifier import verify
-from openbadges.verifier.utils import make_string_from_bytes
 
 try:
     from .testfiles.test_components import test_components
@@ -84,7 +84,7 @@ class JwsVerificationTests(unittest.TestCase):
         self.assertEqual(len(actions), 2)
 
         # Construct an invalid signature by adding to payload after signing, one theoretical attack.
-        signed = jws.sign(self.assertion, self.key, algorithm='RS256')
+        jws.sign(self.assertion, self.key, algorithm='RS256')
         self.assertion_data['evidence'] = 'http://hahafakeinserteddata.com'
 
         encoded_separator = '.'
@@ -244,8 +244,8 @@ class JwsFullVerifyTests(unittest.TestCase):
         for doc in [input_assertion, input_badgeclass, input_issuer, cryptographic_key_doc, revocation_list]:
             responses.add(responses.GET, doc['id'], json=doc, status=200)
 
-        header = {'alg': 'RS256'}
-        payload = json.dumps(input_assertion).encode()
+        # header = {'alg': 'RS256'}
+        # payload = json.dumps(input_assertion).encode()
         signature = jws.sign(input_assertion, key, algorithm='RS256')
 
         response = verify(signature, use_cache=False)
