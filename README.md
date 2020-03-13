@@ -17,7 +17,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install --upgrade pip
 pip install -r ./server/requirements/test.txt
-python openbadges/verifier/server/app.py
+PYTHONPATH=. python -m openbadges.verifier.server
 ```
 A local server will start up on the development port 5000 (by default), which you can access from your browser or other HTTP client.
 
