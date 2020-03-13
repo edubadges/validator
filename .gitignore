@@ -8,3 +8,5 @@ build/
 .cache/
 README.rst
 .venv/
+.coverage
+htmlcov/

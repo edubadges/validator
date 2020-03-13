@@ -1,41 +1,43 @@
 # Open Badges Validator Core
 
-Open Badges Validator Core is a python package designed to verify the validity of Open Badges based on a variety of input sources and present a useful interface for accessing their properties and validation information. HTTP, Python and command line APIs are provided.
+Open Badges Validator Core is a python package designed to verify the validity of Open Badges based on a variety of 
+input sources and present a useful interface for accessing their properties and validation information. HTTP, Python 
+and command line APIs are provided.
 
 Open Badges Validator Core is released by [IMS Global Learning Consortium](https://www.imsglobal.org).
 
-This package builds on Badgecheck, originated by [Concentric Sky](https://concentricsky.com). Other IMS Global members who have contributed to this package include [D2L](https://www.d2l.com/) and [Chalk & Wire](http://www.chalkandwire.com).
+This package builds on Badgecheck, originated by [Concentric Sky](https://concentricsky.com). Other IMS Global members 
+who have contributed to this package include [D2L](https://www.d2l.com/) and [Chalk & Wire](http://www.chalkandwire.com).
 
 ## User documentation
 
-### Installing the package
-
-For best results, [create and activate a local virtual environment](http://docs.python-guide.org/en/latest/dev/virtualenvs/).
-
-You may install the validator directly from [pypi](https://pypi.python.org/pypi/openbadges/): `pip install openbadges`
-
-### Running the validator over the command-line
-
-When installed into an activated environment, a command line script will be available.
-
-`openbadges verify --data 'https://example.org/badgeassertion'`
-
-See help with `openbadges verify --help`
-
-There are two optional positional arguments, *input_file* and *output_file*. If you don't specify an output file, results will be written to stdout.
-If you wish to provide input data, such as a URL from the command and write JSON results to an output file, you may use a `-` to skip the first input_file argument.
-`openbadges verify - results.json --data 'https://example.org/badgeassertion'`
-
-You may pass a JSON string of an expected recipient profile:
-`openbadges verify input.json --recipient '{"email": "me@example.org", "url": "http://example.org"}'
-
 ### Running the Flask server
-
-A Flask web server is an optional component of the Open Badges validator. The necessary dependency is installed when you install from `pip install -r requirements.txt`. You may install the server using pip with the optional server flag: `pip install openbadges [server]`
-
-In order to run the server, activate your environment, navigate to the folder that was installed, and execute the following command: `python openbadges/verifier/server/app.py`
-
+```
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install -r ./server/requirements/test.txt
+python openbadges/verifier/server/app.py
+```
 A local server will start up on the development port 5000 (by default), which you can access from your browser or other HTTP client.
+
+### Running tests
+```
+pytest --cov=openbadges --cov-report html:htmlcov tests
+open htmlcov/index.html
+```
+### Flake8
+There are many flake8 violations. 
+```
+flake8 openbadges/
+```
+### cURL examples
+```
+curl -X POST -H 'Accept: application/json' -F 'data=https://api.badgr.io/public/assertions/RBZ6QhNSRQKW7e0W5BvQSA'  'http://localhost:5000/results'
+```
+```
+curl -X POST -H 'Accept: application/json' -F image=@./tests/testfiles/badgr_badge_online.png  'http://localhost:5000/results'
+```
 
 ### Interpreting the results
 
