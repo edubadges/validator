@@ -33,7 +33,7 @@ def results():
     profile = None
     eduid_given = False
     if not data and isinstance(request.form.get('data'), six.string_types) or request.files:
-        user_input = request.form['data']
+        user_input = request.form['data'] if 'data' in request.form else None
         if 'image' in request.files and len(request.files['image'].filename):
             user_input = request.files['image']
         edu_id = request.form.get('profile')
