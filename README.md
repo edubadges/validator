@@ -16,7 +16,7 @@ who have contributed to this package include [D2L](https://www.d2l.com/) and [Ch
 python3 -m venv .venv
 source .venv/bin/activate
 pip install --upgrade pip
-pip install -r ./server/requirements/test.txt
+pip install -r ./test_requirements.txt
 PYTHONPATH=. python -m openbadges.verifier.server
 ```
 A local server will start up on the development port 5000 (by default), which you can access from your browser or other HTTP client.
