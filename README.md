@@ -21,6 +21,12 @@ PYTHONPATH=. python -m openbadges.verifier.server
 ```
 A local server will start up on the development port 5000 (by default), which you can access from your browser or other HTTP client.
 
+### cURL examples
+```
+curl -X POST -H 'Accept: application/json' -F 'data=https://api.badgr.io/public/assertions/RBZ6QhNSRQKW7e0W5BvQSA'  'http://localhost:5000/results'
+curl -X POST -H 'Accept: application/json' -F image=@./tests/testfiles/badgr_badge_online.png  'http://localhost:5000/results'
+```
+
 ### Running tests
 ```
 pytest --cov=openbadges --cov-report html:htmlcov tests
@@ -30,13 +36,6 @@ open htmlcov/index.html
 There are many flake8 violations. 
 ```
 flake8 openbadges/
-```
-### cURL examples
-```
-curl -X POST -H 'Accept: application/json' -F 'data=https://api.badgr.io/public/assertions/RBZ6QhNSRQKW7e0W5BvQSA'  'http://localhost:5000/results'
-```
-```
-curl -X POST -H 'Accept: application/json' -F image=@./tests/testfiles/badgr_badge_online.png  'http://localhost:5000/results'
 ```
 
 ### Interpreting the results
