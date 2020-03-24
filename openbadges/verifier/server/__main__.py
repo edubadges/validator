@@ -44,6 +44,8 @@ def results():
             profile = None
     elif data:
         user_input = data.get('data')
+        if type(user_input) == dict:  # for API calls
+            user_input = json.dumps(user_input)
         try:
             profile = data['profile']
             if isinstance(profile, six.string_types):
