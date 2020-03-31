@@ -1,7 +1,7 @@
-from flask import Flask, redirect, render_template, request
 import json
 import six
-
+import os
+from flask import Flask, redirect, render_template, request
 from openbadges.verifier import verify, utils
 
 app = Flask(__name__)
@@ -82,4 +82,6 @@ def results():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    if os.getenv('DEBUG_MODE'):
+        app.run(debug=True)
+    app.run(debug=False)
