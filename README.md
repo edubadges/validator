@@ -1,4 +1,4 @@
-# Open Badges Validator Core
+# Open Badges Validator Core - Modified to be used with Edubadges
 
 Open Badges Validator Core is a python package designed to verify the validity of Open Badges based on a variety of 
 input sources and present a useful interface for accessing their properties and validation information. HTTP, Python 
