@@ -1,4 +1,6 @@
 import json
+
+import flask
 import six
 import os
 from flask import Flask, redirect, render_template, request
@@ -20,6 +22,15 @@ def home():
     recipient_profile = {'type': l[0] if l else ''}
     recipient_profile['value'] = request.args.get(recipient_profile['type'], "")
     return render_template('index.html', url=provided_url, recipient_profile=recipient_profile)
+
+
+@app.route("/git.info", methods=['GET', 'OPTIONS'])
+def git_info():
+    file = f"{os.path.dirname(os.path.realpath(__file__))}/static/git.info"
+    with open(file) as f:
+        response = flask.jsonify({'git': f.read()})
+        response.headers.add('Content', 'application/json')
+        return response
 
 
 @app.route("/results", methods=['GET'])

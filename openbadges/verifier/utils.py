@@ -120,7 +120,7 @@ def get_assertion(verification_results):
 def get_assertion_image(verification_results, assertion_image_url):
     if assertion_image_url:
         original_json = verification_results.get('input', {}).get('original_json')
-        if original_json:
+        if original_json and assertion_image_url in original_json:
             return original_json[assertion_image_url]
 
 
