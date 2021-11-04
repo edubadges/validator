@@ -1,7 +1,9 @@
 import json
-import six
 import os
+
+import six
 from flask import Flask, redirect, render_template, request
+
 from openbadges.verifier import verify, utils
 
 app = Flask(__name__)
@@ -20,6 +22,13 @@ def home():
     recipient_profile = {'type': l[0] if l else ''}
     recipient_profile['value'] = request.args.get(recipient_profile['type'], "")
     return render_template('index.html', url=provided_url, recipient_profile=recipient_profile)
+
+
+@app.route("/git.info", methods=['GET', 'OPTIONS'])
+def git_info():
+    file = f"{os.path.dirname(os.path.realpath(__file__))}/static/git.info"
+    with open(file) as f:
+        return f.read(), 200
 
 
 @app.route("/results", methods=['GET'])
