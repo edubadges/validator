@@ -1,9 +1,9 @@
 import json
-import os
 
+import flask
 import six
+import os
 from flask import Flask, redirect, render_template, request
-
 from openbadges.verifier import verify, utils
 
 app = Flask(__name__)
@@ -28,7 +28,9 @@ def home():
 def git_info():
     file = f"{os.path.dirname(os.path.realpath(__file__))}/static/git.info"
     with open(file) as f:
-        return f.read(), 200
+        response = flask.jsonify({'git': f.read()})
+        response.headers.add('Content', 'application/json')
+        return response
 
 
 @app.route("/results", methods=['GET'])
