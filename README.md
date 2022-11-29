@@ -24,6 +24,9 @@ A local server will start up on the development port 5000 (by default), which yo
 ### cURL examples
 ```
 curl -X POST -H 'Accept: application/json' -F 'data=https://api.badgr.io/public/assertions/RBZ6QhNSRQKW7e0W5BvQSA'  'http://localhost:5000/results'
+curl -X POST -H 'Accept: application/json' -F 'data=https://api.badgr.io/public/assertions/RBZ6QhNSRQKW7e0W5BvQSA'  'https://validate-test.edubadges.nl/results'
+curl -X POST -H 'Accept: application/json' -F 'data=https://api-test.edubadges.nl/public/assertions/20ydcyZvQRqJ9Q7wu1REmw'  'https://validate-test.edubadges.nl/results'
+
 curl -X POST -H 'Accept: application/json' -F image=@./tests/testfiles/badgr_badge_online.png  'http://localhost:5000/results'
 ```
 

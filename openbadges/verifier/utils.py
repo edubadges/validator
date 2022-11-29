@@ -126,7 +126,8 @@ def get_assertion_image(verification_results, assertion_image_url):
 
 error_explanations = {
     "DETECT_AND_VALIDATE_NODE_CLASS": "This most likely means that this Badge is set to private by the receiver. Please ask the receiver to set it to public. If this is not the case, then this Badge is not hosted anymore and cannot be verified.",
-    "ASSERTION_TIMESTAMP_CHECKS": "This means the Badge has expired and is not valid anymore."
+    "ASSERTION_TIMESTAMP_CHECKS": "This means the Badge has expired and is not valid anymore.",
+    "JSONLD_COMPACT_DATA": "The context could not be expanded by JSON LD. Most likely there are extensions in the badge class that are not published or not are hosted anymore."
 }
 
 
@@ -151,15 +152,14 @@ def get_errors(verification_results):
 def override_eduid_error(report):
     # make sure uri format check failure will pass
     if report['errorCount'] > 0:
-        index_of_uri_format_failure = None
-        uri_format_failure_message_found = False
-        for index, message in enumerate(report['messages']):
+        error_messages = []
+        for message in report['messages']:
             if 'not valid in unknown type node' in message['result']:  # = uri format validity check fail
-                index_of_uri_format_failure = index
-                uri_format_failure_message_found = True
-        if uri_format_failure_message_found:
+                error_messages.append(message)
+        for error_message in error_messages:
+            report['messages'].remove(error_message)
             report['errorCount'] -= 1
-            report['messages'].pop(index_of_uri_format_failure)
+
 
 
 def get_extensions(verification_results):
