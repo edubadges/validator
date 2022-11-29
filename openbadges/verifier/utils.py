@@ -152,15 +152,14 @@ def get_errors(verification_results):
 def override_eduid_error(report):
     # make sure uri format check failure will pass
     if report['errorCount'] > 0:
-        index_of_uri_format_failure = None
-        uri_format_failure_message_found = False
-        for index, message in enumerate(report['messages']):
+        error_messages = []
+        for message in report['messages']:
             if 'not valid in unknown type node' in message['result']:  # = uri format validity check fail
-                index_of_uri_format_failure = index
-                uri_format_failure_message_found = True
-        if uri_format_failure_message_found:
+                error_messages.append(message)
+        for error_message in error_messages:
+            report['messages'].remove(error_message)
             report['errorCount'] -= 1
-            report['messages'].pop(index_of_uri_format_failure)
+
 
 
 def get_extensions(verification_results):
