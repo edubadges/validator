@@ -10,3 +10,4 @@ README.rst
 .venv/
 .coverage
 htmlcov/
+dep.tree

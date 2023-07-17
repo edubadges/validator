@@ -1,8 +1,8 @@
 -r requirements.txt
-flask-testing==0.7.1
-pytest==5.2.0
-pytest-cov==2.8.1
-flake8==3.6.0
-responses==0.10.5
-blinker==1.4
-pypandoc==1.4
+flask-testing==0.8.1
+pytest==7.4.0
+pytest-cov==4.1.0
+flake8==6.0.0
+responses==0.23.1
+blinker==1.6.2
+pypandoc==1.11
