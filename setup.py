@@ -52,7 +52,7 @@ setup(
     install_requires=[
         'aniso8601>=1.2.0',
         'Click == 6.7',
-        'future==0.16.0',
+        'future>=0.18.3',
         'jsonschema==2.6.0',
         'language-tags==0.4.3',
         'openbadges-bakery>=1.0.1',
