@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.1.0] - 2023-10-23
+- Bugfix security warning.
+- Bugfix in the custom 'override_eduid_error'.
+- Bump uwsgi from 2.0.21 to 2.0.22.
+- Bump urllib3 from 1.26.15 to 1.26.18.
+
 ## [3.0.0] - 2021-11-15
 - Return version as json.
 - Added endpoint for git version.
