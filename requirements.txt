@@ -4,7 +4,7 @@ future==0.18.3
 jsonschema==4.18.3
 language-tags==1.2.0
 openbadges_bakery==2.0.0
-pycryptodome==3.18.0
+pycryptodome==3.19.1
 pydux==0.2.2
 PyLD==1.0.5
 #PyLD==2.0.3
